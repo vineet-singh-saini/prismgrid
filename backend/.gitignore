@@ -1,0 +1,15 @@
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Python/ML artifacts
+.venv/
+ml/.pydeps/
+ml/artifacts/
+ml/__pycache__/
+ml/dataset/dataset.csv
+*.pyc
