@@ -22,6 +22,7 @@ dotenv.config({ path: envFilePath });
 
 const runtimeEnv = { ...process.env };
 const isProduction = runtimeEnv.NODE_ENV === "production";
+const defaultPythonBin = process.platform === "win32" ? "python" : "python3";
 
 if (!isProduction) {
   runtimeEnv.MONGODB_URI ||= "mongodb://127.0.0.1:27017/prism-grid-dev";
@@ -38,7 +39,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default("7d"),
   CLIENT_ORIGIN: z.string().url().default("http://localhost:5173"),
   CLIENT_ORIGINS: z.string().optional(),
-  PYTHON_BIN: z.string().default("python"),
+  PYTHON_BIN: z.string().default(defaultPythonBin),
 });
 
 const parsedEnv = envSchema.safeParse(runtimeEnv);
