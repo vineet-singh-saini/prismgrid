@@ -13,16 +13,34 @@ import { simulationRoutes } from "./routes/simulationRoutes.js";
 import { userRoutes } from "./routes/userRoutes.js";
 import { vendorRoutes } from "./routes/vendorRoutes.js";
 
+function normalizeOrigin(rawOrigin) {
+  try {
+    return new URL(rawOrigin).origin;
+  } catch {
+    return null;
+  }
+}
+
 function getAllowedOrigins() {
-  const origins = new Set([env.CLIENT_ORIGIN]);
+  const origins = new Set();
+  const primaryOrigin = normalizeOrigin(env.CLIENT_ORIGIN);
+
+  if (primaryOrigin) {
+    origins.add(primaryOrigin);
+  }
+
   const additionalOrigins = env.CLIENT_ORIGINS
     ? env.CLIENT_ORIGINS.split(",")
         .map((origin) => origin.trim())
         .filter(Boolean)
     : [];
 
-  for (const origin of additionalOrigins) {
-    origins.add(origin);
+  for (const rawOrigin of additionalOrigins) {
+    const normalizedOrigin = normalizeOrigin(rawOrigin);
+
+    if (normalizedOrigin) {
+      origins.add(normalizedOrigin);
+    }
   }
 
   for (const origin of Array.from(origins)) {
